@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>904</width>
-    <height>646</height>
+    <width>909</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>-1</x>
       <y>-1</y>
       <width>891</width>
-      <height>591</height>
+      <height>611</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -39,14 +39,35 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="editButton">
+     <item row="5" column="2">
+      <widget class="QPushButton" name="importButton">
        <property name="text">
-        <string>修改</string>
+        <string>导入</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" rowspan="6">
+     <item row="1" column="2">
+      <widget class="QPushButton" name="addButton">
+       <property name="text">
+        <string>新增</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QPushButton" name="delButton">
+       <property name="text">
+        <string>删除</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QPushButton" name="exportButton">
+       <property name="text">
+        <string>导出</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" rowspan="6">
       <widget class="QTableWidget" name="tableWidget">
        <property name="autoFillBackground">
         <bool>false</bool>
@@ -112,45 +133,28 @@
        </column>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="addButton">
-       <property name="text">
-        <string>新增</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QPushButton" name="exportButton">
-       <property name="text">
-        <string>导出</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="2">
-      <widget class="QPushButton" name="delButton">
+      <widget class="QPushButton" name="editButton">
        <property name="text">
-        <string>删除</string>
+        <string>修改</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QPushButton" name="importButton">
+     <item row="0" column="2">
+      <widget class="QPushButton" name="chooseDateButton">
        <property name="text">
-        <string>导入</string>
+        <string>选择日期</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="currentDateLabel">
+       <property name="text">
+        <string>当前日期：yyyy/MM/dd</string>
        </property>
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QDateEdit" name="dateEdit">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>600</y>
-      <width>110</width>
-      <height>22</height>
-     </rect>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -158,12 +162,24 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>904</width>
+     <width>909</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="AboutMenu">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="projectAction"/>
+   </widget>
+   <addaction name="AboutMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="projectAction">
+   <property name="text">
+    <string>关于项目</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

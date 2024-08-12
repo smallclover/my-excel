@@ -1,8 +1,11 @@
 import sys
+from idlelib.help_about import AboutDialog
+
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import QDate, QTimer, QThread, pyqtSignal
 from PyQt6.QtWidgets import QMainWindow, QDialog, QTableWidgetItem, QMessageBox, QProgressDialog, QFileDialog
 
+from calendar_dialog import Ui_CalenderDialog
 from db_op import DBOperations
 from excel_util import ExcelUtil
 from main import Ui_MainWindow
@@ -20,11 +23,18 @@ class MyExcelMainWindow(QMainWindow, Ui_MainWindow):
         self.init_table()
 
     def init_ui(self):
+        current_date = QDate.currentDate()
+        formatted_date = current_date.toString("yyyy-MM-dd")
+        self.currentDateLabel.setText(f'当前日期：{formatted_date}')
+
         self.addButton.clicked.connect(self.add_dialog)
         self.exportButton.clicked.connect(self.export_to_excel)
         self.delButton.clicked.connect(self.del_dialog)
         self.editButton.clicked.connect(self.edit_dialog)
         self.importButton.clicked.connect(self.import_dialog)
+        self.AboutMenu.triggered.connect(self.about_dialog)
+        self.chooseDateButton.clicked.connect(self.show_calendar)
+
 
     def init_table(self):
         data_list = DBOperations.get_data()
@@ -92,6 +102,20 @@ class MyExcelMainWindow(QMainWindow, Ui_MainWindow):
         dialog = ImportDialog()
         dialog.data_imported.connect(self.refresh_table)
         # dialog.show()
+        dialog.exec()
+
+    def about_dialog(self):
+        about_dialog = QMessageBox(self)
+        about_dialog.setWindowTitle('About')
+        about_dialog.setText('''
+        这是一个生成勤务表的项目
+        作者:三页半
+        ''')
+        about_dialog.exec()
+
+    def show_calendar(self):
+        # 创建并显示 CalendarDialog
+        dialog = CalendarDialog()
         dialog.exec()
 
     def export_to_excel(self):
@@ -193,6 +217,7 @@ class AddDialog(QDialog, Ui_Dialog):
 
 class ImportDialog(QDialog, Ui_ImportDialog):
     data_imported = QtCore.pyqtSignal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -258,6 +283,16 @@ class ImportDialog(QDialog, Ui_ImportDialog):
         selected = self.lineBreakList.currentText()
         return linebreak_map.get(selected, '\n')  # 默认返回 \n
 
+
+class CalendarDialog(QDialog, Ui_CalenderDialog):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.init_ui()
+
+    def init_ui(self):
+        pass
 
 class ExportThread(QThread):
     # 定义信号
