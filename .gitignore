@@ -5,8 +5,6 @@
 /dist/
 # 忽略 .idea 目录及其所有内容
 .idea/
-/.idea/
 
 # 忽略 __pycache__ 目录及其所有内容
 __pycache__/
-/__pycache__/
