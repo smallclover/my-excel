@@ -12,10 +12,25 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_CalenderDialog(object):
     def setupUi(self, CalenderDialog):
         CalenderDialog.setObjectName("CalenderDialog")
-        CalenderDialog.resize(355, 306)
-        self.calendarWidget = QtWidgets.QCalendarWidget(parent=CalenderDialog)
-        self.calendarWidget.setGeometry(QtCore.QRect(1, 2, 351, 301))
+        CalenderDialog.resize(586, 551)
+        self.verticalLayoutWidget = QtWidgets.QWidget(parent=CalenderDialog)
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 10, 571, 521))
+        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.calendarWidget = QtWidgets.QCalendarWidget(parent=self.verticalLayoutWidget)
         self.calendarWidget.setObjectName("calendarWidget")
+        self.verticalLayout.addWidget(self.calendarWidget)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.choosedDateLabel = QtWidgets.QLabel(parent=self.verticalLayoutWidget)
+        self.choosedDateLabel.setObjectName("choosedDateLabel")
+        self.horizontalLayout_3.addWidget(self.choosedDateLabel)
+        self.okButton = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        self.okButton.setObjectName("okButton")
+        self.horizontalLayout_3.addWidget(self.okButton)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
 
         self.retranslateUi(CalenderDialog)
         QtCore.QMetaObject.connectSlotsByName(CalenderDialog)
@@ -23,3 +38,5 @@ class Ui_CalenderDialog(object):
     def retranslateUi(self, CalenderDialog):
         _translate = QtCore.QCoreApplication.translate
         CalenderDialog.setWindowTitle(_translate("CalenderDialog", "Dialog"))
+        self.choosedDateLabel.setText(_translate("CalenderDialog", "当前选中的日期是：yyyy/MM/dd 星期X"))
+        self.okButton.setText(_translate("CalenderDialog", "确定"))

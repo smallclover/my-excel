@@ -62,17 +62,17 @@
       <widget class="QComboBox" name="work_start_time">
        <item>
         <property name="text">
-         <string>9:00</string>
+         <string>09:00:00</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>10:00</string>
+         <string>10:00:00</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>11:00</string>
+         <string>11:00:00</string>
         </property>
        </item>
       </widget>
@@ -88,22 +88,22 @@
       <widget class="QComboBox" name="work_end_time">
        <item>
         <property name="text">
-         <string>18:00</string>
+         <string>18:00:00</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>19:00</string>
+         <string>19:00:00</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>20:00</string>
+         <string>20:00:00</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>21:00</string>
+         <string>21:00:00</string>
         </property>
        </item>
       </widget>

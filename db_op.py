@@ -1,7 +1,9 @@
 import os.path
 import sqlite3
+import datetime
 
 from my_work import MyWork
+from small_tools import SmallTools
 
 
 class DBOperations:
@@ -27,10 +29,20 @@ class DBOperations:
             print('Table created successfully')
 
     @staticmethod
-    def get_data():
+    def get_data(export_date=None):
+        print(f'export_date:{export_date}')
+        if export_date is None:
+            first_day, last_day = SmallTools.get_current_month_first_and_last_day()
+        else:
+            first_day, last_day = SmallTools.get_first_and_last_day(export_date)
+
         conn = sqlite3.connect('my_excel.db')
         c = conn.cursor()
-        cursor = c.execute('SELECT * FROM my_work')
+        cursor = c.execute('''
+                            SELECT id, work_date, work_start_time, work_end_time, work_sleep_time, work_content, other
+                            FROM my_work WHERE work_date BETWEEN ? AND ?
+                            ''',
+                           (first_day, last_day))
 
         data_list = []
         for row in cursor:
@@ -89,14 +101,26 @@ class DBOperations:
         connect = sqlite3.connect('my_excel.db')
         c = connect.cursor()
 
+        # 获取当前的年份和月份
+        current_year = datetime.datetime.now().year
+        current_month = datetime.datetime.now().month
+
         for data in data_list:
-            work_date = data[0]
+            print(f'data: {data}')
+            # 提取日期部分
+            day = int(data[0].split('/')[1])  # 假设输入的日期格式为 "8/1", "8/2", 等
+
+            # 将日期转换为当前的年/月/日
+            work_date = datetime.datetime(current_year, current_month, day).strftime("%Y/%m/%d")
             work_content = " ".join(data[1:])
-            work_start_time = "09:00"
-            work_end_time = "18:00"
+            work_start_time = f'{work_date} 09:00:00'
+            work_end_time = f'{work_date} 18:00:00'
             work_sleep_time = "1"
             other = "默认备注"
-
+            print(f'''
+            work_date:{work_date}, work_start_time:{work_start_time}, work_end_time:{work_end_time},
+            work_sleep_time:{work_sleep_time},other:{other}
+            ''')
             c.execute('''
                 INSERT INTO my_work (work_date, work_start_time, work_end_time, work_sleep_time, work_content, other)
                 VALUES (?, ?, ?, ?, ?, ?);

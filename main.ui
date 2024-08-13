@@ -39,13 +39,6 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="5" column="2">
-      <widget class="QPushButton" name="importButton">
-       <property name="text">
-        <string>导入</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="QPushButton" name="addButton">
        <property name="text">
@@ -57,13 +50,6 @@
       <widget class="QPushButton" name="delButton">
        <property name="text">
         <string>删除</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QPushButton" name="exportButton">
-       <property name="text">
-        <string>导出</string>
        </property>
       </widget>
      </item>
@@ -79,7 +65,7 @@
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
        <property name="sizeAdjustPolicy">
-        <enum>QAbstractScrollArea::AdjustIgnored</enum>
+        <enum>QAbstractScrollArea::AdjustToContents</enum>
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
@@ -133,6 +119,23 @@
        </column>
       </widget>
      </item>
+     <item row="5" column="2">
+      <widget class="QPushButton" name="importButton">
+       <property name="text">
+        <string>导入</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="chooseExportDateButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>选择导出日期</string>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="2">
       <widget class="QPushButton" name="editButton">
        <property name="text">
@@ -140,19 +143,146 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="chooseDateButton">
+     <item row="4" column="2">
+      <widget class="QPushButton" name="exportButton">
        <property name="text">
-        <string>选择日期</string>
+        <string>导出</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QLabel" name="currentDateLabel">
-       <property name="text">
-        <string>当前日期：yyyy/MM/dd</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="currentDateLabel">
+         <property name="text">
+          <string>当前日期:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="currentDateInput">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="text">
+          <string>yyyy/MM/dd</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="exportMonthLabel">
+         <property name="text">
+          <string>指定导出月份:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="exportMonthcomboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+         <item>
+          <property name="text">
+           <string>2024/01</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/02</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/03</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/04</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/05</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/06</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/07</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/08</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/09</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/10</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/11</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2024/12</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>月</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="exportDateLabel">
+         <property name="text">
+          <string>导出日期:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="exportDateInput">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>yyyy/MM/dd</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>

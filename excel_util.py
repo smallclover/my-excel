@@ -1,3 +1,4 @@
+import calendar
 import os
 
 import openpyxl
@@ -7,11 +8,13 @@ import win32com.client as win32
 from openpyxl.utils import get_column_letter
 
 from db_op import DBOperations
+from small_tools import SmallTools
 
 
 class ExcelUtil:
 
-    def export_to_excel(self, input_file='template_1.xlsm', output_file='./wangshun.xlsx', sheet_name='勤務報告'):
+    def export_to_excel(self, export_date, input_file='template_1.xlsm', output_file='./wangshun.xlsx',
+                        sheet_name='勤務報告'):
         # 读取现有工作簿
         wb = openpyxl.load_workbook(input_file)
         ws = wb.active
@@ -88,46 +91,59 @@ class ExcelUtil:
         e2_cell.number_format = '[$-411]ggge"年"m"月"'
         print(e2_cell.number_format)
 
-        data_list = DBOperations.get_data()
-        e_col = []
-        f_col = []
-        g_col = []
-        i_col = []
-        j_col = []
+        data_list = DBOperations.get_data(export_date)
 
-        for row in data_list:
-            # 根据实际的数据结构调整索引
-            e_col.append(row[2])  # 开始时间
-            f_col.append(row[3])  # 结束时间
-            g_col.append(row[4])  # 休息时间
+        # 解析 export_date
+        export_date = "2024/08"
+        year, month = map(int, export_date.split('/'))
 
-            try:
-                start_time = datetime.strptime(row[2], "%H:%M:%S")
-                end_time = datetime.strptime(row[3], "%H:%M:%S")
-                time_diff = end_time - start_time
-                # 将时间差转换为小时数（取整数）
-                time_diff_hours = time_diff.seconds // 3600  # 转换为小时并取整
-                # 休息时间
-                rest_hours = int(row[4]) if row[4] else 0
-                i_col.append(str(time_diff_hours-rest_hours))  # 转换为字符串并添加到列表
-            except ValueError:
-                i_col.append("")
+        # 获取月份的天数
+        days_in_month = calendar.monthrange(year, month)[1]
 
-            j_col.append(row[5])  # 内容
+        # 遍历每一天
+        for day in range(1, days_in_month + 1):
+            current_date = datetime(year, month, day)
 
-        for idx, (e_value, f_value, g_value, i_value, j_value) in enumerate(
-                zip(e_col, f_col, g_col, i_col, j_col)):
-            ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('E'), value=e_value)
-            ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('F'), value=f_value)
-            ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('G'), value=g_value)
-            ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('I'), value=i_value)
-            ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('J'), value=j_value)
+            # 检查 data_list 中是否有当前日期的数据
+            date_exists_in_data_list = any(
+                datetime.strptime(row[1], "%Y/%m/%d").date() == current_date.date() for row in data_list)
+
+            if SmallTools.is_holiday_or_weekend(current_date) and not date_exists_in_data_list:
+                continue  # 如果是休日或祝日，并且 data_list 中没有这个日期的数据，则跳过这一天
+
+            # 查找data_list中是否有当前日期的数据
+            for row in data_list:
+                data_date = datetime.strptime(row[1], "%Y/%m/%d")  # 假设 row[1] 是日期
+                # print(f'data_date: {data_date}, current_date: {current_date}')
+                if data_date.date() == current_date.date():
+                    try:
+                        start_time = datetime.strptime(row[2], "%Y/%m/%d %H:%M:%S")
+                        end_time = datetime.strptime(row[3], "%Y/%m/%d %H:%M:%S")
+                        time_diff = end_time - start_time
+                        time_diff_hours = time_diff.seconds // 3600  # 转换为小时并取整
+                        rest_hours = int(row[4]) if row[4] else 0
+                        i_value = str(time_diff_hours - rest_hours)
+                    except ValueError:
+                        i_value = ""
+
+                    # 填充Excel表格
+                    idx = current_date.day - 1  # 根据日期计算行索引
+                    ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('E'),
+                            value=start_time)  # 开始时间
+                    ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('F'),
+                            value=end_time)  # 结束时间
+                    ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('G'),
+                            value=row[4])  # 休息时间
+                    ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('I'),
+                            value=i_value)  # 时间差
+                    ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('J'), value=row[5])  # 内容
+
+                    break  # 只处理当前日期的数据
 
         # 保存到新的文件
         wb.save(output_file)
 
         self.excel_to_pdf('wangshun.xlsx', '勤務報告', 'output.pdf')
-
 
     def excel_to_pdf(self, excel_file, sheet_name, pdf_file):
         # 获取当前工作目录
@@ -157,5 +173,3 @@ class ExcelUtil:
 
         # 退出Excel应用程序
         excel.Quit()
-
-
