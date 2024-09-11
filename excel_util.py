@@ -6,7 +6,7 @@ import jpholiday
 from datetime import datetime, timedelta
 import win32com.client as win32
 from openpyxl.utils import get_column_letter
-
+from openpyxl.drawing.image import Image as ExcelImage
 from db_op import DBOperations
 from small_tools import SmallTools
 
@@ -15,6 +15,8 @@ class ExcelUtil:
 
     def export_to_excel(self, export_date, input_file='template_1.xlsm', output_file='./wangshun.xlsx',
                         sheet_name='勤務報告'):
+
+        print(f'export_date: {export_date}')
         # 读取现有工作簿
         wb = openpyxl.load_workbook(input_file)
         ws = wb.active
@@ -25,10 +27,23 @@ class ExcelUtil:
             raise ValueError(f"Sheet '{sheet_name}' does not exist in the workbook.")
 
         # 获取当前日期
-        today = datetime.today()
-        first_day = today.replace(day=1)
-        next_month = first_day.replace(day=28) + timedelta(days=4)
-        last_day = next_month - timedelta(days=next_month.day)
+        # today = datetime.today()
+        # first_day = today.replace(day=1)
+        # next_month = first_day.replace(day=28) + timedelta(days=4)
+        # last_day = next_month - timedelta(days=next_month.day)
+
+        # 将 export_date 转换为 datetime 对象
+        export_year, export_month = map(int, export_date.split('/'))
+
+        # 获取该月的第一天
+        export_first_day = datetime(export_year, export_month, 1)
+
+        # 获取该月的最后一天
+        # 获取下个月的第一天，再减去一天得到本月最后一天
+        if export_month == 12:
+            export_last_day = datetime(export_year + 1, 1, 1) - timedelta(days=1)
+        else:
+            export_last_day = datetime(export_year, export_month + 1, 1) - timedelta(days=1)
 
         # 获取开始单元格的行和列
         start_row, start_col = openpyxl.utils.cell.coordinate_to_tuple('B10')
@@ -56,8 +71,8 @@ class ExcelUtil:
             target_cell.border = source_cell.border.copy()
             target_cell.alignment = source_cell.alignment.copy()
 
-        current_date = first_day
-        while current_date <= last_day:
+        current_date = export_first_day
+        while current_date <= export_last_day:
             date_cell = ws.cell(row=start_row, column=start_col, value=current_date)
             copy_cell_format(source_date_cell, date_cell)
             date_cell.number_format = source_date_cell.number_format
@@ -81,7 +96,7 @@ class ExcelUtil:
         # 将值设置为 datetime 对象
         # 如果是设置字符串他并不会对格式生效
         # 值的类型会影响到格式，请注意
-        e2_cell.value = datetime.strptime(first_day.strftime('%Y/%m/%d'), '%Y/%m/%d')
+        e2_cell.value = datetime.strptime(export_first_day.strftime('%Y/%m/%d'), '%Y/%m/%d')
 
         # 恢复样式
         e2_cell.font = e2_cell.font.copy()
@@ -94,7 +109,7 @@ class ExcelUtil:
         data_list = DBOperations.get_data(export_date)
 
         # 解析 export_date
-        export_date = "2024/08"
+        # export_date = "2024/08"
         year, month = map(int, export_date.split('/'))
 
         # 获取月份的天数
@@ -139,6 +154,16 @@ class ExcelUtil:
                     ws.cell(row=10 + idx, column=openpyxl.utils.cell.column_index_from_string('J'), value=row[5])  # 内容
 
                     break  # 只处理当前日期的数据
+
+        # 插入图片到L45单元格        # img_path = 'modified_stamp_1.png'  # 这是你之前生成并保存的图片路径
+        #         # img = ExcelImage(img_path)
+        #         #
+        #         # # 设置图片位置为L45单元格
+        #         # img.anchor = 'L45'
+        #         #
+        #         # # 将图片添加到工作表
+        #         # ws.add_image(img)
+
 
         # 保存到新的文件
         wb.save(output_file)

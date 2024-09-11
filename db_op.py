@@ -128,3 +128,14 @@ class DBOperations:
 
         connect.commit()
         connect.close()
+
+    @staticmethod
+    def delete_data_all():
+        connect = sqlite3.connect('my_excel.db')
+        c = connect.cursor()
+        command = '''
+            DELETE FROM my_work
+        '''
+        c.execute(command)
+        connect.commit()
+        connect.close()
