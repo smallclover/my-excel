@@ -13,7 +13,7 @@ from small_tools import SmallTools
 
 class ExcelUtil:
 
-    def export_to_excel(self, export_date, input_file='template_1.xlsm', output_file='./wangshun.xlsx',
+    def export_to_excel(self, export_date, input_file='template_3.xlsm', output_file='./wangshun.xlsx',
                         sheet_name='勤務報告'):
 
         print(f'export_date: {export_date}')
@@ -164,7 +164,19 @@ class ExcelUtil:
         #         # # 将图片添加到工作表
         #         # ws.add_image(img)
 
+        # 读取 J 列第 1 到第 10 行的数据
+        column = 'I'
+        start_row = 10
+        end_row = 40
 
+        total = 0
+        for row in range(start_row, end_row + 1):
+            cell_value = ws[f"{column}{row}"].value
+            if cell_value is not None:
+                total += int(cell_value)
+
+        # 将总和写入 J11
+        ws[f"{column}41"] = total
         # 保存到新的文件
         wb.save(output_file)
 

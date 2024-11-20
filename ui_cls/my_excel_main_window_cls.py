@@ -63,7 +63,7 @@ class MyExcelMainWindow(QMainWindow, Ui_MainWindow):
 
     def add_dialog(self):
 
-        dialog = AddDialog()
+        dialog = AddDialog(parent=self)
         dialog.data_saved.connect(self.refresh_table)
         # dialog.show()
         dialog.exec()

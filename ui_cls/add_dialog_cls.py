@@ -13,14 +13,23 @@ class AddDialog(QDialog, Ui_Dialog):
     # 1:追加2:修改3:删除
     def __init__(self, action_type=1, data=[], row_id=None, parent=None):
         super().__init__(parent)
+        self.parent = parent
         self.row_id = row_id
+        self.current_date = parent.exportMonthcomboBox.currentText()
         self.action_type = action_type
+        year, month = self.current_date.split("/")
+        print(f"Year: {year}, Month: {month}")
+        self.year = year
+        self.month = month
         self.setupUi(self)
         self.init_ui(data, row_id)
 
     def init_ui(self, data=None, row_id=None):
         self.okButton.clicked.connect(self.ok_clicked)
         self.cancelButton.clicked.connect(self.reject)
+        self.AddMonth.setCurrentText(self.month)
+        self.AddMonth.setEnabled(False)
+        self.AddYear.setEnabled(False)
         if self.action_type == 1:
             pass
         elif self.action_type == 2:
@@ -42,8 +51,10 @@ class AddDialog(QDialog, Ui_Dialog):
             self.close()
             if self.action_type == 1:
                 # 获取当前日期
-                current_date = QDate.currentDate()
-                formatted_date = current_date.toString("yyyy/MM/dd")
+                # current_date = QDate.currentDate()
+                # formatted_date = current_date.toString("yyyy/MM/dd")
+                formatted_date = self.year + "/" + self.month + "/" + self.AddDay.currentText()
+                current_date = QDate.fromString(formatted_date, "yyyy/MM/dd")
                 # 获取开始时间和结束时间 (hh:mm:ss)
                 start_time = self.work_start_time.currentText()
                 end_time = self.work_end_time.currentText()
